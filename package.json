@@ -6,10 +6,22 @@
     "test": "jest",
     "build": "tsc",
     "start": "node dist/index.js",
-    "eslint": "eslint .",
+    "lint": "eslint .",
     "format": "prettier --write . --ignore-unknown",
     "prepare": "husky",
+    "typecheck": "tsc --noEmit",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,js,json,md}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "repository": {
     "type": "git",
@@ -33,8 +45,11 @@
     "@types/node": "^24.10.0",
     "@types/supertest": "^6.0.3",
     "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",
-    "prettier": "^3.6.2",
+    "lint-staged": "^16.2.7",
+    "prettier": "3.7.4",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",

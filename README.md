@@ -8,7 +8,7 @@ A minimal, batteries‑included Express 5 backend starter written in TypeScript.
 - Fast local dev with ts-node-dev (auto-restart, transpile-only)
 - Testing with Jest + ts-jest + Supertest
 - Linting with ESLint 9 and typescript-eslint; formatting with Prettier
-- Husky pre-commit hook that formats, lints, runs tests, and re-adds changes
+- Husky pre-commit hook with lint-staged that auto-fixes linting and formatting issues
 - Environment variables via dotenv (.env/.env.example)
 - CORS and cookie-parser pre-wired
 - Structured, colored logs via Winston (console + `logs/all.log` + `logs/error.log`)
@@ -20,7 +20,7 @@ A minimal, batteries‑included Express 5 backend starter written in TypeScript.
 - Node.js, Express 5
 - TypeScript 5, ts-node-dev
 - Jest + ts-jest, Supertest
-- ESLint 9, typescript-eslint, Prettier, Husky
+- ESLint 9, typescript-eslint, Prettier, lint-staged, Husky
 - Winston
 
 ## Project structure
@@ -94,19 +94,19 @@ npm start
 - `build` — compile TypeScript to `dist/`
 - `start` — run compiled app from `dist/index.js`
 - `test` — run Jest test suite
-- `eslint` — run ESLint across the repo (tests are ignored by config)
+- `lint` — run ESLint across the repo
 - `format` — apply Prettier formatting
+- `typecheck` — run TypeScript type checking without emitting files
 - `prepare` — install Husky hooks
 
-Note: The pre-commit hook formats, lints, runs tests, then stages changes:
+Note: The pre-commit hook uses lint-staged to automatically fix linting and formatting issues on staged files:
 
 ```
 .husky/pre-commit
-npx npm run format
-npx npm run eslint
-npx npm run test
-git add -A .
+npx lint-staged
 ```
+
+Lint-staged is configured in `package.json` to run ESLint with auto-fix and Prettier on all staged `*.{ts,js,json,md}` files.
 
 ## API
 
@@ -174,13 +174,14 @@ Config: see `jest.config.js` (Node environment; ts-jest transform; ignores `dist
 
 ## Linting & formatting
 
-- ESLint flat config at `eslint.config.mjs` with `@eslint/js` and `typescript-eslint`
+- ESLint flat config at `eslint.config.mjs` with `@eslint/js`, `typescript-eslint`, and integrated Prettier
+- ESLint now enforces Prettier formatting rules via `eslint-plugin-prettier`
 - Prettier for formatting via `npm run format`
 
 Ignore patterns (excerpt):
 
 ```js
-ignores: ["dist/", "jest.config.js", "temp/", "src/**/**.test.ts"],
+globalIgnores(["dist/", "jest.config.js", "temp/"]),
 ```
 
 ## TypeScript
@@ -215,5 +216,5 @@ Build with `npm run build` and run from `dist/` using `npm start`.
 - Express 5
 - TypeScript, ts-node-dev
 - Jest, ts-jest, Supertest
-- ESLint, Prettier, Husky
+- ESLint, Prettier, Lint-staged, Husky
 - Winston
